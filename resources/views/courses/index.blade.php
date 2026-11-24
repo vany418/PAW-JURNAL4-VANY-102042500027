@@ -26,7 +26,7 @@
     </div>
 
     <div class="card-body" style="padding-bottom: 0;">
-        <form action="{{ route('courses.index') }}" method="GET" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+        <form action="{{ route('courses.index') }}" method="GET" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; align-items: center;">
             <div style="flex: 1; min-width: 240px;">
                 <input 
                     type="text" 
@@ -37,15 +37,32 @@
                 >
             </div>
             
-            {{-- TODO 6: Tambahkan dropdown filter Semester dan dropdown Urutkan (Sort) di sini --}}
+            {{-- Dropdown Filter Semester --}}
+            <div style="min-width: 180px;">
+                <select name="semester" class="form-control" onchange="this.form.submit()">
+                    <option value="">Semua Semester</option>
+                    @foreach($semesters as $semester)
+                        <option value="{{ $semester }}" {{ request('semester') == $semester ? 'selected' : '' }}>
+                            {{ $semester }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Dropdown Urutkan (Sorting) --}}
+            <div style="min-width: 180px;">
+                <select name="sort" class="form-control" onchange="this.form.submit()">
+                    <option value="">Urutkan: Default</option>
+                    <option value="nama_asc" {{ request('sort') == 'nama_asc' ? 'selected' : '' }}>Nama (A - Z)</option>
+                    <option value="nama_desc" {{ request('sort') == 'nama_desc' ? 'selected' : '' }}>Nama (Z - A)</option>
+                    <option value="sks_desc" {{ request('sort') == 'sks_desc' ? 'selected' : '' }}>SKS (Terbanyak)</option>
+                    <option value="sks_asc" {{ request('sort') == 'sks_asc' ? 'selected' : '' }}>SKS (Tersedikit)</option>
+                </select>
+            </div>
             
-            <button type="submit" class="btn btn-secondary">
-                Filter &amp; Cari
-            </button>
-            @if(request('search'))
-                <a href="{{ route('courses.index') }}" class="btn btn-secondary" style="color: var(--slate-500);">
-                    Reset
-                </a>
+            <button type="submit" class="btn btn-secondary">Filter &amp; Cari</button>
+            @if(request('search') || request('semester') || request('sort'))
+                <a href="{{ route('courses.index') }}" class="btn btn-secondary" style="color: var(--slate-500);">Reset</a>
             @endif
         </form>
     </div>
